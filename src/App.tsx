@@ -69,6 +69,20 @@ function App() {
         }));
     };
 
+    const handleRefreshUsers = async (): Promise<void> => {
+        try {
+            const response = await fetch('http://localhost:9000/api/users'); // Endpoint per obtenir els usuaris
+            if (!response.ok) {
+                throw new Error('Failed to fetch users');
+            }
+            const updatedUsers = await response.json();
+            setUsers(updatedUsers); // Actualitzem l'estat amb la llista d'usuaris actualitzada
+        } catch (error) {
+            console.error('Error refreshing users:', error);
+            alert('Failed to refresh users. Please try again.');
+        }
+    };
+
     const toggleDarkMode = () => {
         setUiState((prev) => {
             const newMode = !prev.isDarkMode;
@@ -94,6 +108,15 @@ function App() {
             alert('Login failed. Please check your credentials.');
         }
     };
+        const handleUpdateUser = (updatedUser: User): void => {
+        setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+                user.id === updatedUser._id ? updatedUser : user
+            )
+        );
+    };
+    
+    <UsersList users={users} onUpdateUser={handleUpdateUser} onRefreshUsers={handleRefreshUsers} />;
 
     return (
         <div className="App" ref={divRef}>
@@ -116,8 +139,11 @@ function App() {
                 ) : (
                     <>
                         <h2>Bienvenido, {currentUser?.name}!</h2>
-                        <UsersList users={users} />
-                        <p>New users: {newUsersNumber}</p>
+                        <UsersList 
+                         users={users} 
+                         onUpdateUser={handleUpdateUser}
+                         onRefreshUsers={handleRefreshUsers} />                        
+                         <p>New users: {newUsersNumber}</p>
                         <Form onNewUser={handleNewUser} />
                     </>
                 )}

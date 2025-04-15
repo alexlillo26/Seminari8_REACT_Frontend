@@ -12,7 +12,9 @@ const INITIAL_STATE: User = {
     age: 0,
     email: '',
     password: '',
-    phone: 0
+    phone: 0,
+    _id: '',
+    id: ''
 };
 
 type FormReducerAction =
@@ -142,3 +144,7 @@ const Form = ({ onNewUser }: FormProps) => {
 };
 
 export default Form;
+
+function uuidv4(): number {
+    throw new Error('Function not implemented.');
+}
